@@ -31,15 +31,15 @@ jobs:
           python-version: '3.11'
 
       - name: 6. Install Dependencies
-        # Added python-docx so we can generate the test file
+        # We need requests for the API client, and python-docx to generate the test file
         run: pip install requests python-docx
 
       - name: 7. Generate the Test Document
-        # This will create 'complex_test.docx' on the runner
-        run: python create_complex_docx.py
+        # This uses an inline Python command to import your generator and create "test.docx"
+        run: python -c "from create_complex_docx import create_complex_docx; create_complex_docx('test.docx')"
 
       - name: 8. Run the Python Client
-        # We run the client (we'll update the client to look for 'complex_test.docx' in a second)
+        # Now the client will successfully find test.docx and send it to your background API!
         run: python pdf_client.py
 
       - name: 9. Upload the PDF Artifact

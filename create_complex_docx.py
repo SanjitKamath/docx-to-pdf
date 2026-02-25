@@ -108,3 +108,6 @@ def create_complex_docx(filename="complex_test.docx"):
     # Save the monster document
     doc.save(filename)
     print(f"Success! {filename} generated successfully.")
+
+if __name__ == "__main__":
+    create_complex_docx()
