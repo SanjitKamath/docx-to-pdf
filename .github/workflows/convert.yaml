@@ -26,19 +26,23 @@ jobs:
         run: sleep 5
 
       - name: 5. Set up Python for the Client
-        # We need Python on the GitHub runner to execute pdf_client.py
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: 6. Install Client Dependencies
-        run: pip install requests
+      - name: 6. Install Dependencies
+        # Added python-docx so we can generate the test file
+        run: pip install requests python-docx
 
-      - name: 7. Run the Python Client
-        # This shoots the test.docx file over to localhost:8000
+      - name: 7. Generate the Test Document
+        # This will create 'complex_test.docx' on the runner
+        run: python create_complex_docx.py
+
+      - name: 8. Run the Python Client
+        # We run the client (we'll update the client to look for 'complex_test.docx' in a second)
         run: python pdf_client.py
 
-      - name: 8. Upload the PDF Artifact
+      - name: 9. Upload the PDF Artifact
         uses: actions/upload-artifact@v4
         with:
           name: API-Converted-PDF
