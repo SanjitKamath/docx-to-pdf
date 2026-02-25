@@ -1,0 +1,9 @@
+python-docx>=0.8.11
+docx2pdf>=0.1.8
+pypandoc>=1.8.1
+pywin32>=305
+comtypes>=1.1.14
+Pillow>=9.0.0
+lxml>=4.9.2
+pytest>=7.0
+

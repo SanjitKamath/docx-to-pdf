@@ -10,6 +10,8 @@ RUN apt-get update && \
 # Set up the working directory
 WORKDIR /app
 
+RUN pip install -r requirements.txt
+
 # Copy your Python script and a sample document into the container
 COPY docx_to_pdf_converter.py .
 COPY test.py .
