@@ -10,6 +10,8 @@ RUN apt-get update && \
 # Set up the working directory
 WORKDIR /app
 
+RUN pip install --upgrade pip
+
 RUN pip install -r requirements.txt
 
 # Copy your Python script and a sample document into the container
