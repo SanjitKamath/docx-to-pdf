@@ -11,7 +11,7 @@ RUN apt-get update && \
 WORKDIR /app
 
 # Copy your Python script and a sample document into the container
-COPY converter.py .
+COPY docx_to_pdf_converter.py .
 COPY test.docx .
 
 # Run the Python script when the container starts
