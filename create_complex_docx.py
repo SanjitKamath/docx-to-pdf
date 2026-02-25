@@ -70,10 +70,12 @@ def create_complex_docx(filename="complex_test.docx"):
     table.cell(0, 0).text = 'MASTER MERGED HEADER ROW'
     table.cell(0, 0).paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
 
-    # Fill data
+    # Fill data using explicit paragraphs instead of \n to avoid LibreOffice fragmentation
     for row in range(1, 4):
         for col in range(4):
-            table.cell(row, col).text = f"R{row}C{col}\nMulti-line"
+            cell = table.cell(row, col)
+            cell.text = f"R{row}C{col}"
+            cell.add_paragraph("Multi-line") # Safely adds the second line
 
     # --- 5. EMBEDDED IMAGES & SIZING ---
     doc.add_heading('Image Rendering', level=1)
@@ -81,7 +83,8 @@ def create_complex_docx(filename="complex_test.docx"):
         url = "https://picsum.photos/600/200" # Random placeholder image
         response = requests.get(url)
         image_stream = io.BytesIO(response.content)
-        doc.add_picture(image_stream, width=Inches(5.5))
+        # Shrunk image width slightly from 5.5 to 4.0 to prevent LibreOffice page-wrap panic
+        doc.add_picture(image_stream, width=Inches(4.0)) 
         img_p = doc.paragraphs[-1]
         img_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         doc.add_paragraph("Figure 1: Center-aligned dynamically fetched image.", style='Caption')
