@@ -12,7 +12,7 @@ WORKDIR /app
 
 RUN pip install --upgrade pip
 
-RUN pip install -r requirements.txt
+RUN python -m pip install -r requirements.txt
 
 # Copy your Python script and a sample document into the container
 COPY docx_to_pdf_converter.py .
