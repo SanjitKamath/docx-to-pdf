@@ -30,7 +30,3 @@ def convert_docx_to_pdf(input_docx_path, output_dir):
         print("Conversion failed!")
         print(f"Error details: {e.stderr.decode('utf-8')}")
 
-if __name__ == "__main__":
-    # Example usage: Convert 'test.docx' and save it in the current directory
-    current_directory = os.path.abspath(os.path.dirname(__file__))
-    convert_docx_to_pdf("test.docx", current_directory)

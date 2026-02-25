@@ -12,7 +12,8 @@ WORKDIR /app
 
 # Copy your Python script and a sample document into the container
 COPY docx_to_pdf_converter.py .
-COPY test.docx .
+COPY test.py .
+COPY create_complex_docx.py .
 
 # Run the Python script when the container starts
-CMD ["python", "docx_to_pdf_converter.py"]
+CMD ["python", "test.py"]
