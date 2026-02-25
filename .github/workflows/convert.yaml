@@ -25,8 +25,10 @@ jobs:
         # This ensures the generated PDF is saved back to GitHub's server, not lost inside the container!
         run: docker run -v ${{ github.workspace }}:/app docx-converter
 
-      - name: 4. Upload the PDF as a Downloadable Artifact
+      - name: 4. Upload converted PDF and source DOCX as artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Converted-PDF-File # The name of the zip file you will download
-          path: test.pdf           # LibreOffice automatically names the output file the same as the input, just with a .pdf extension  
+          name: converted-files
+          path: |
+            test.pdf
+            test.docx
