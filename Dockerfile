@@ -15,4 +15,4 @@ COPY docx_to_pdf_converter.py .
 COPY test.docx .
 
 # Run the Python script when the container starts
-CMD ["python", "converter.py"]
+CMD ["python", "docx_to_pdf_converter.py"]
