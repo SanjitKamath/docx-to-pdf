@@ -1,4 +1,4 @@
-from dox_to_pdf_converter import convert_docx_to_pdf
+from docx_to_pdf_converter import convert_docx_to_pdf
 from create_complex_docx import create_complex_docx
 import os
 
