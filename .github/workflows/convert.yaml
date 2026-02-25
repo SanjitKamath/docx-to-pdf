@@ -1,7 +1,5 @@
-name: Convert DOCX to PDF
+name: API Conversion Pipeline
 
-# This tells GitHub WHEN to run the script. 
-# Here, it runs on every push to the main branch, or when you trigger it manually.
 on:
   push:
     branches:
@@ -9,26 +7,39 @@ on:
   workflow_dispatch: 
 
 jobs:
-  build-and-convert:
-    runs-on: ubuntu-latest # GitHub gives us a fresh Linux server
+  test-api-conversion:
+    runs-on: ubuntu-latest 
 
     steps:
       - name: 1. Download your repository files
         uses: actions/checkout@v4
 
-      - name: 2. Build the Docker Image
-        # This builds the LibreOffice container using your Dockerfile
-        run: docker build -t docx-converter .
+      - name: 2. Build the API Server Image
+        run: docker build -t docx-api .
 
-      - name: 3. Run Container and Generate PDF
-        # Here is the magic: We use '-v' to mount the GitHub runner's workspace directly into the container's /app folder.
-        # This ensures the generated PDF is saved back to GitHub's server, not lost inside the container!
-        run: docker run -v ${{ github.workspace }}:/app docx-converter
+      - name: 3. Start the API Server (Background)
+        # -d runs it in the background, -p maps the ports
+        run: docker run -d -p 8000:8000 docx-api
 
-      - name: 4. Upload converted PDF and source DOCX as artifacts
+      - name: 4. Wait for Server to Boot
+        # Give Uvicorn a few seconds to fully start up
+        run: sleep 5
+
+      - name: 5. Set up Python for the Client
+        # We need Python on the GitHub runner to execute pdf_client.py
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 6. Install Client Dependencies
+        run: pip install requests
+
+      - name: 7. Run the Python Client
+        # This shoots the test.docx file over to localhost:8000
+        run: python pdf_client.py
+
+      - name: 8. Upload the PDF Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: converted-files
-          path: |
-            test.pdf
-            test.docx
+          name: API-Converted-PDF
+          path: final_output.pdf
