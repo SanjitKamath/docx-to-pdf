@@ -42,8 +42,11 @@ jobs:
         # Now the client will successfully find test.docx and send it to your background API!
         run: python pdf_client.py
 
-      - name: 9. Upload the PDF Artifact
+      - name: 9. Upload the Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: API-Converted-PDF
-          path: final_output.pdf
+          name: API-Converted-Files
+          # Use the pipe '|' to list multiple files to include in the zip
+          path: |
+            final_output.pdf
+            test.docx
