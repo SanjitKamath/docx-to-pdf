@@ -16,6 +16,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy API server code
+COPY docx_to_pdf_converter.py .
 COPY main.py .
 
 # Expose the API port

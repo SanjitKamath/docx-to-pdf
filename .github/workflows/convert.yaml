@@ -32,21 +32,16 @@ jobs:
 
       - name: 6. Install Dependencies
         # We need requests for the API client, and python-docx to generate the test file
-        run: pip install requests python-docx
+        run: pip install requests 
 
-      - name: 7. Generate the Test Document
-        # This uses an inline Python command to import your generator and create "test.docx"
-        run: python -c "from create_complex_docx import create_complex_docx; create_complex_docx('test.docx')"
-
-      - name: 8. Run the Python Client
+      - name: 7. Run the Python Client
         # Now the client will successfully find test.docx and send it to your background API!
         run: python pdf_client.py
 
-      - name: 9. Upload the Artifacts
+      - name: 8. Upload the Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: API-Converted-Files
           # Use the pipe '|' to list multiple files to include in the zip
           path: |
             final_output.pdf
-            test.docx

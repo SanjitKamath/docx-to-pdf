@@ -1,9 +1,11 @@
 import os
-import subprocess
 import tempfile
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.background import BackgroundTasks
+
+# Import the logic from your dedicated converter file
+from docx_to_pdf_converter import convert_docx_to_pdf
 
 app = FastAPI(title="DOCX to PDF Converter API")
 
@@ -28,22 +30,14 @@ async def convert_docx(background_tasks: BackgroundTasks, file: UploadFile = Fil
     output_filename = os.path.splitext(os.path.basename(input_path))[0] + ".pdf"
     output_path = os.path.join(output_dir, output_filename)
 
-    # 3. Run LibreOffice conversion
-    command = [
-        'soffice', 
-        '--headless', 
-        '--convert-to', 'pdf',
-        '--outdir', output_dir, 
-        input_path
-    ]
-    
+    # 3. Run LibreOffice conversion using your custom module
     try:
-        subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    except subprocess.CalledProcessError as e:
+        convert_docx_to_pdf(input_path, output_dir)
+    except Exception as e:
         cleanup_temp_files(input_path) # Cleanup on failure
-        raise HTTPException(status_code=500, detail=f"Conversion failed: {e.stderr.decode('utf-8')}")
+        raise HTTPException(status_code=500, detail=str(e))
     
-    # 4. Return the PDF and schedule the cleanup of both files
+    # 4. Return the PDF and schedule the cleanup
     background_tasks.add_task(cleanup_temp_files, input_path, output_path)
     
     return FileResponse(
