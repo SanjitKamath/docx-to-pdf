@@ -1,0 +1,32 @@
+name: Convert DOCX to PDF
+
+# This tells GitHub WHEN to run the script. 
+# Here, it runs on every push to the main branch, or when you trigger it manually.
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: 
+
+jobs:
+  build-and-convert:
+    runs-on: ubuntu-latest # GitHub gives us a fresh Linux server
+
+    steps:
+      - name: 1. Download your repository files
+        uses: actions/checkout@v4
+
+      - name: 2. Build the Docker Image
+        # This builds the LibreOffice container using your Dockerfile
+        run: docker build -t docx-converter .
+
+      - name: 3. Run Container and Generate PDF
+        # Here is the magic: We use '-v' to mount the GitHub runner's workspace directly into the container's /app folder.
+        # This ensures the generated PDF is saved back to GitHub's server, not lost inside the container!
+        run: docker run -v ${{ github.workspace }}:/app docx-converter
+
+      - name: 4. Upload the PDF as a Downloadable Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Converted-PDF-File # The name of the zip file you will download
+          path: test.pdf           # LibreOffice automatically names the output file the same as the input, just with a .pdf extension  
