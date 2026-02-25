@@ -90,7 +90,7 @@ def create_complex_docx(filename="complex_test.docx"):
 
     # --- 6. SECTION BREAKS & ORIENTATION CHANGES ---
     # This is the ultimate test: changing from Portrait to Landscape halfway through
-    doc.add_paragraph().insert_page_break()
+    doc.add_page_break()
     new_section = doc.add_section()
     new_section.orientation = WD_ORIENT.LANDSCAPE
     
